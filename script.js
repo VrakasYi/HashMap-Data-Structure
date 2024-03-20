@@ -61,7 +61,63 @@ function HashMap() {
     };
   };
 
+  function length() {
+    let keySum = 0;
+    buckets.forEach(bucket => {
+      if (bucket !== null) {
+        keySum += bucket.length; 
+      };
+    });
+    return keySum;
+  };
+
+  function clear() {
+    let num = length();
+    buckets = Array(num).fill(null);
+  };
+
+  function keys() {
+    let allKeys = [];
+    buckets.forEach(bucket => {
+      if (bucket !== null) {
+        bucket.forEach(pair => {
+          allKeys.push(pair[0]);
+        });
+      };
+    });
+    return allKeys;
+  };
+
+  function values() {
+    let allValues =[];
+    buckets.forEach(bucket => {
+      if (bucket !== null) {
+        bucket.forEach(pair => {
+          allValues.push(pair[1]);
+        });
+      };
+    });
+    return allValues;
+  };
+
+  function entries() {
+    let allEntries = [];
+    buckets.forEach(bucket => {
+      if (bucket !== null) {
+        bucket.forEach(pair => {
+          allEntries.push(pair);
+        });
+      };
+    });
+    return allEntries;
+  }
+
   return {
+    entries,
+    values,
+    keys,
+    clear,
+    length,
     remove,
     has,
     set,
@@ -75,9 +131,12 @@ myTable.set('first name', 'bob');
 myTable.set('last name', 'tim');
 myTable.set('age', 5);
 myTable.set('dob', '1/2/1999');
-console.log(myTable.buckets);
-myTable.remove('first name');
-console.log(myTable.buckets);
+console.log(myTable.entries());
+
+// console.log(myTable.buckets);
+// console.log(myTable.length());
+// myTable.remove('first name');
+// console.log(myTable.buckets);
 // console.log(myTable.get("first name"));
 // console.log(myTable.get("last name"));
 // console.log(myTable.has('first name'))
