@@ -1,5 +1,3 @@
-// import LinkedList from './linked-list';
-// const linkedList = LinkedList();
 function hash(key) {
   let hashCode = 0;
       
@@ -35,8 +33,8 @@ function HashMap() {
     };
     
     let load = length();
-    if (buckets.length / load > 0.75) {
-      reSize();
+      if ((load / buckets.length) > 0.75) {
+        reSize();
     };
   };
 
@@ -162,11 +160,12 @@ function HashMap() {
 };
 
 const myTable = new HashMap();
+
 myTable.set('first name', 'bob');
 myTable.set('last name', 'tim');
 myTable.set('age', 5);
 myTable.set('dob', '1/2/1999');
-//  console.log(myTable.entries());
+
 console.log(myTable.buckets);
 myTable.set('a', '1');
 myTable.set('b', '2');
