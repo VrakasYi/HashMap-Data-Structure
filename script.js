@@ -8,27 +8,23 @@ function hash(key) {
     hashCode = primeNumber * hashCode + key.charCodeAt(i);
   };
   
-  return hashCode % 4;
+  return hashCode;
 };
 
 function HashMap() {
-  let buckets = Array(4).fill(null);
-  let bucketsLength = 4;
-
+  let buckets = Array(4).fill(null);  
+  
   function set(key, value) {
+    let index = hash(key) % buckets.length;
     // let hashCode = hash(key);
     // let index = hashCode //% 4
-    let index = hash(key);
-    if (index < 0 || index >= bucketsLength) {
+    if (index < 0 || index >= buckets.length) {
       throw new Error("Trying to access index out of bound");
     }; 
 
-    if (buckets[index] === undefined) {
-      buckets[index] = [key,value];
-    };
-
     if (buckets[index] === null) {
-      buckets[index] = [[key, value]];  
+      buckets[index] = [[key, value]];
+      // buckets[index] = [key, value];
     } else {
       const sameKey = buckets[index].find(x => x[0] === key);
       if (sameKey) {
@@ -36,11 +32,50 @@ function HashMap() {
       } else {
         buckets[index].push([key,value]);
       };
-    };  
+    };
+    
+    let load = length();
+    if (buckets.length / load > 0.75) {
+      reSize();
+    };
+  };
+
+  function reSize() {
+    let copy = Array(buckets.length * 2).fill(null);
+    //create new double size Array
+    buckets.forEach(bucket => {
+      if(bucket !== null) {
+        // bucket.forEach(([key, value]) => {
+        //     let index = hash(key) % copy.length; 
+        //     if (copy[index] === null) {
+        //       copy[index] = []; // Initialize copy[index] if it's null
+        //     }
+        //     copy[index].push([key,value]);
+        //   });
+        // };
+        if (bucket !== null) {
+          bucket.forEach(([key, value]) => {
+            let index = hash(key) % copy.length;      
+
+            if (copy[index] === null) {
+              copy[index] = [[key, value]];  
+            } else {
+              const sameKey = copy[index].find(x => x[0] === key);
+              if (sameKey) {
+                sameKey[1] = value;
+              } else {
+                copy[index].push([key,value]);
+              };
+            };
+          });
+        };
+      };
+      buckets = copy;
+    });
   };
   
   function get(key) {
-    let index = hash(key);
+    //let index = hash(key);
     return buckets[index].find(x => x[0] === key)[1];
   };
 
@@ -48,11 +83,11 @@ function HashMap() {
     let index = hash(key);
     if (buckets[index] === null) return false
     return true;
-  }
+  };
 
   function remove(key) {
     if (has(key)) {
-      let index = hash(key);
+      //let index = hash(key);
       const removeIndex = buckets[index].findIndex(x => x[0] === key);
       buckets[index].splice(removeIndex, 1)
       return true;
@@ -131,12 +166,19 @@ myTable.set('first name', 'bob');
 myTable.set('last name', 'tim');
 myTable.set('age', 5);
 myTable.set('dob', '1/2/1999');
-console.log(myTable.entries());
+//  console.log(myTable.entries());
+console.log(myTable.buckets);
+myTable.set('a', '1');
+myTable.set('b', '2');
+myTable.set('c', '3');
+myTable.set('d', '4');
+myTable.set('f', '5');
 
-// console.log(myTable.buckets);
-// console.log(myTable.length());
+console.log(myTable.buckets);
+console.log(myTable.entries());
+console.log(myTable.length());
 // myTable.remove('first name');
 // console.log(myTable.buckets);
 // console.log(myTable.get("first name"));
 // console.log(myTable.get("last name"));
-// console.log(myTable.has('first name'))
+// console.log(myTable.has('first name'));
